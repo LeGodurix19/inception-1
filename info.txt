@@ -1,0 +1,61 @@
+#afficher tous les docker existants
+sudo docker ps -a
+
+#arreter le docker
+sudo docker stop DOCKER_NAME
+
+#supprimer le docker
+sudo docker rm DOCKER_NAME
+
+#verifier que le docker a bien ete cree
+sudo docker images
+
+#creer le docker
+sudo docker build -t DOCKER_NAME .
+
+#lancer le docker
+sudo docker run -it -d -p PORT:PORT --name DOCKER_NAME DOCKER_NAME
+#pour lancer mariadb seul
+docker run --env-file ../../.env -it -d -p 3306:3306 --name mariadb mariadb
+
+#executer le docker
+sudo docker exec -it DOCKER_NAME bash
+
+#Afficher les msgs erreur
+sudo docker logs DOCKER_NAME
+
+#afficher fichier nginx.conf originel
+echo "$(docker exec -it nginx cat /etc/nginx/nginx.conf)" > nginx.conf
+
+
+
+#si pb pour kill un conteneur
+docker inspect --format '{{.State.Pid}}' mariadb
+#recup le numero rouge puis verifier qu'il tourne sur l'hote
+ps -aux | grep numeroRouge
+#tuer directement le processus du conteneur
+sudo kill -9 numeroRouge
+#sinon --> sudo kill -9 $(docker inspect --format '{{.State.Pid}}' DOCKER_NAME)
+
+
+
+
+#TO DO
+Probleme avec mariadb IMPOSSIBLE a STOP -> sur portable
+502 Bad Gateway dans navigateur
+
+
+caymard.42.fr -> sudo nano /etc/hosts
+
+#.env
+
+DOMAIN_NAME="caymard.42.fr"
+MYSQL_ROOT_PASSWORD=inception
+MYSQL_USER=caymard
+MYSQL_PASSWORD=inception
+MYSQL_DATABASE=wordpress
+
+WORDPRESS_DB_HOST="mariadb:3306"
+WORDPRESS_DB_USER=caymard
+WORDPRESS_DB_PASSWORD=inception
+WORDPRESS_DB_NAME=wordpress
