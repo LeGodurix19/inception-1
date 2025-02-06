@@ -37,13 +37,16 @@ RUN curl -O https://wordpress.org/latest.tar.gz && \
 COPY ./tools/wp-config.sh /usr/local/bin/wp-config.sh
 RUN chmod +x /usr/local/bin/wp-config.sh
 
+#COPY ./tools/www.conf /usr/local/bin/www.conf
+#RUN chmod +x /usr/local/bin/www.conf
+COPY ./tools/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+RUN chmod +x /etc/php/7.4/fpm/pool.d/www.conf
+
 # Set proper permissions for WordPress files
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
 # Expose the HTTP port
-EXPOSE 80
-#EXPOSE 443????
+EXPOSE 9000
 
 # Run wp-config.sh before starting PHP-FPM
 CMD ["/bin/bash", "-c", "mkdir -p /run/php && chown -R www-data:www-data /run/php && /usr/local/bin/wp-config.sh && php-fpm7.4 -F"]
-

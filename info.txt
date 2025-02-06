@@ -42,8 +42,8 @@ sudo kill -9 numeroRouge
 
 #TO DO
 Probleme avec mariadb IMPOSSIBLE a STOP -> sur portable
-502 Bad Gateway dans navigateur
-
+502 Bad Gateway dans navigateur -> liaison/lecture du PORT 9000 problematique
+1x mariadb et 1x nginx --> running
 
 caymard.42.fr -> sudo nano /etc/hosts
 
