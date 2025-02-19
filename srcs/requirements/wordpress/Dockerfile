@@ -1,6 +1,6 @@
 FROM debian:bullseye
 
-# Install necessary dependencies
+# Installer les dépendances nécessaires
 RUN apt-get update && apt-get install -y \
     curl \
     zip \
@@ -20,33 +20,29 @@ RUN apt-get update && apt-get install -y \
     php-imagick \
     && apt-get clean
 
-# Create required directories
-RUN mkdir -p /run/php && chown -R www-data:www-data /run/php
+# Créer les répertoires nécessaires
+RUN mkdir -p /run/php /var/www/html \
+    && chown -R www-data:www-data /run/php /var/www/html
 
-# Create directory for WordPress
-RUN mkdir -p /var/www/html
-
-# Download and extract WordPress
+# Télécharger et installer WordPress
 RUN curl -O https://wordpress.org/latest.tar.gz && \
     tar -xzf latest.tar.gz && \
     rm latest.tar.gz && \
     mv wordpress/* /var/www/html/ && \
     rmdir wordpress
 
-# Copy the wp-config generation script
+# Copier le script de configuration automatique de WordPress
 COPY ./tools/wp-config.sh /usr/local/bin/wp-config.sh
 RUN chmod +x /usr/local/bin/wp-config.sh
 
-#COPY ./tools/www.conf /usr/local/bin/www.conf
-#RUN chmod +x /usr/local/bin/www.conf
+# Copier le fichier de configuration PHP-FPM
 COPY ./tools/www.conf /etc/php/7.4/fpm/pool.d/www.conf
-RUN chmod +x /etc/php/7.4/fpm/pool.d/www.conf
 
-# Set proper permissions for WordPress files
+# Donner les bonnes permissions aux fichiers WordPress
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
-# Expose the HTTP port
+# Exposer le port utilisé par PHP-FPM
 EXPOSE 9000
 
-# Run wp-config.sh before starting PHP-FPM
-CMD ["/bin/bash", "-c", "mkdir -p /run/php && chown -R www-data:www-data /run/php && /usr/local/bin/wp-config.sh && php-fpm7.4 -F"]
+# Lancer PHP-FPM en foreground et générer le wp-config au démarrage
+CMD ["/bin/bash", "-c", "/usr/local/bin/wp-config.sh && php-fpm7.4 -F"]

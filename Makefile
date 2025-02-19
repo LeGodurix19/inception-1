@@ -1,15 +1,16 @@
 all:
-	mkdir -p /home/caymard/data/wordpress
-	mkdir -p /home/caymard/data/mysql
-
-	docker compose -f ./srcs/docker-compose.yml up --build -d
+	
+	cd srcs && docker compose -f docker-compose.yml up --build -d
+	sudo echo "127.0.0.1 example.com" >> /etc/hosts
+	sudo echo "127.0.0.1 www.example.com" >> /etc/hosts
 
 clean:
-	docker compose -f srcs/docker-compose.yml down
+	
+	cd srcs && docker compose -f docker-compose.yml down
 
 fclean: clean
 	docker system prune --volumes --force
-	rm -rf /home/caymard/data
+	rm -rf srcs/data
 
 re: fclean all
 

@@ -1,3 +1,7 @@
+networks:
+  inception:
+    driver: bridge
+
 services:
   nginx:
     env_file: .env
@@ -7,7 +11,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - /home/${USER}/data/wordpress:/var/www/html
+      - ./data/wordpress:/var/www/html
     networks:
       - inception
     depends_on:
@@ -25,7 +29,7 @@ services:
       WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
     env_file: .env
     volumes:
-      - /home/${USER}/data/wordpress:/var/www/html
+      - ./data/wordpress:/var/www/html
     networks:
       - inception
     depends_on:
@@ -42,10 +46,6 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     env_file: .env
     volumes:
-      - /home/${USER}/data/mariadb:/var/lib/mysql
+      - ./data/mariadb:/var/lib/mysql
     networks:
       - inception
-
-networks:
-  inception:
-    driver: bridge
